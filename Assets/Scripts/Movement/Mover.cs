@@ -4,17 +4,23 @@ using UnityEngine.AI;
 
 namespace RPG.Movement
 {
+    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(ActionScheduler))]
+    [RequireComponent(typeof(Health))]
     public class Mover : MonoBehaviour, IAction
     {
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
+            _health = GetComponent<Health>();
             _animator = GetComponent<Animator>();
             _actionScheduler = GetComponent<ActionScheduler>();
         }
 
         void Update()
         {
+            _agent.enabled = !_health.IsDead;
+            
             UpdateAnimator();
         }
 
@@ -42,6 +48,7 @@ namespace RPG.Movement
         }
 
         private NavMeshAgent _agent;
+        private Health _health;
         private Animator _animator;
         private ActionScheduler _actionScheduler;
     }

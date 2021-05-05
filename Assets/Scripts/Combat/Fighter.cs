@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace RPG.Combat
 {
+    [RequireComponent(typeof(Mover))]
+    [RequireComponent(typeof(ActionScheduler))]
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
@@ -35,7 +37,7 @@ namespace RPG.Combat
             }
         }
 
-        public bool CanAttack(CombatTarget target)
+        public bool CanAttack(GameObject target)
         {
             if (target == null) return false;
             
@@ -66,7 +68,7 @@ namespace RPG.Combat
             _target.TakeDamage(weaponDamage);
         }
 
-        public void Attack(CombatTarget target)
+        public void Attack(GameObject target)
         {
             _actionScheduler.StartAction(this);
             _target = target.GetComponent<Health>();

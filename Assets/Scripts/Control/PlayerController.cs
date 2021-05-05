@@ -1,4 +1,5 @@
 ﻿using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using RPG.Movement;
 using UnityEngine.AI;
@@ -11,10 +12,12 @@ namespace RPG.Control
         {
             _mover = GetComponent<Mover>();
             _fighter = GetComponent<Fighter>();
+            _health = GetComponent<Health>();
         }
 
         void Update()
         {
+            if (_health.IsDead) return;
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
         }
@@ -25,11 +28,13 @@ namespace RPG.Control
             foreach (RaycastHit hitInfo in hitInfos)
             {
                 CombatTarget target = hitInfo.transform.GetComponent<CombatTarget>();
-                if (!_fighter.CanAttack(target)) continue;
+                if (target == null) continue;
 
-                if (Input.GetMouseButtonDown(0))
+                if (!_fighter.CanAttack(target.gameObject)) continue;
+
+                if (Input.GetMouseButton(0))
                 {
-                    _fighter.Attack(target);
+                    _fighter.Attack(target.gameObject);
                 }
 
                 return true;
@@ -60,5 +65,6 @@ namespace RPG.Control
 
         private Mover _mover;
         private Fighter _fighter;
+        private Health _health;
     }
 }
